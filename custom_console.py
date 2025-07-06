@@ -18,7 +18,15 @@ COLOR_CYAN = "\033[96m"  # Bright Cyan
 COLOR_WHITE = "\033[97m" # Bright White
 RESET_COLOR = "\033[0m" # Reset to default color and formatting
 
-def simple_spinner(duration=3):
+# Clear console log
+def clear_console():
+    """Clears the console screen based on the operating system."""
+
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Loading Spinners
+def simple_initializer_spinner(duration=3, msg="Loading Complete!"):
     """
     Displays a Spinner Indicator that appears to animation over time.
     """
@@ -30,19 +38,26 @@ def simple_spinner(duration=3):
         sys.stdout.flush()
         time.sleep(0.1) # Controls the speed of the spin
         i += 1
-    sys.stdout.write(f'{COLOR_CYAN}\rLoading complete!') # Overwrite with final message and a newline
+    sys.stdout.write(f'{COLOR_GREEN}\r{msg}') # Overwrite with final message and a newline
     sys.stdout.flush()
     print(f'{RESET_COLOR}')
 
-# Clear console log
-def clear_console():
-    """Clears the console screen based on the operating system."""
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-
-
-
+def simple_spinner(duration=3, msg="Loading Complete!"):
+    """
+    Displays a Spinner Indicator that appears to animation over time.
+    """
+    spinner_chars = ['-', '\\', '|', '/'] # Characters for the spinner
+    start_time = time.time()
+    i = 0
+    while time.time() - start_time < duration:
+        sys.stdout.write(f'\r{COLOR_MAGENTA}Loading {spinner_chars[i % len(spinner_chars)]}')
+        sys.stdout.flush()
+        time.sleep(0.1) # Controls the speed of the spin
+        i += 1
+    # Overwrite with final message and a newline
+    sys.stdout.write(f'{COLOR_CYAN}\r{msg}') 
+    sys.stdout.flush()
+    print(f'{RESET_COLOR}')
 
 # Timers
 """
@@ -53,7 +68,7 @@ from datetime import datetime
 
 # Start timer
 start_time = time.time()
-def start_timer_process_timer():
+def start_process_timer():
     """
     Starts the timer and prints the start time.
     Normally used to start or initialize a program.
