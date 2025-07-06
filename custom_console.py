@@ -76,11 +76,11 @@ def start_process_timer():
     global start_time
     start_time = time.time()
     print(f"""
-    {COLOR_RED}Llama Chat{RESET_COLOR} 
+    {COLOR_CYAN}~ ChiLLama Chat 🤖{RESET_COLOR} 
           
-    |oooo|        |oooo|
-    |oooo| .----. |oooo|
-    |Oooo|/\_||_/\|oooO|
+    |{COLOR_CYAN}oooo{RESET_COLOR}|        |{COLOR_CYAN}oooo{RESET_COLOR}|
+    |{COLOR_CYAN}oooo{RESET_COLOR}| .----. |{COLOR_CYAN}oooo{RESET_COLOR}|
+    |{COLOR_CYAN}Oooo{RESET_COLOR}|/\_||_/\|{COLOR_CYAN}oooO{RESET_COLOR}|
     `----' / __ \ `----'
     ,/ |#|/\/__\/\|#| \,
    /  \|#|| |/\| ||#|/  \\
@@ -106,14 +106,15 @@ def start_process_timer():
     print(f"\n🚀 {COLOR_MAGENTA}~ Started @ ({datetime.now().strftime('%I:%M %p').lower()}){RESET_COLOR}\n")
 
 # End timer
+# TODO: "Add Minutes/Hours"
 def process_timer_elapsed_time_success():
     """Returns the elapsed time since the start."""
     print(f"\n✅ {COLOR_GREEN}Completed in {time.time() - start_time:.2f} seconds{RESET_COLOR}\n")
     print(f"{COLOR_GREEN}██████████████████{RESET_COLOR}\n")
-    print("""
+    print(f"""
                     | 
-    ____________    __ -+-  ____________ 
-    \_____     /   /_ \ |   \     _____/
+    ____________    __ {COLOR_GREEN}-+-{RESET_COLOR}  ____________ 
+    \_____     /   /_ \{COLOR_GREEN} |{RESET_COLOR}   \     _____/
      \_____    \____/  \____/    _____/
       \_____                    _____/
          \___________  ___________/

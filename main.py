@@ -62,7 +62,7 @@ for year in years:
 print(f"\n{custom_console.COLOR_MAGENTA}Vector Store Index: {custom_console.RESET_COLOR}")
 print(index_set_2)
 
-# Query Engine
+# Creating (4) Query Engines (tools) for each VectorStoreIndex
 individual_query_engine_tools = [
     QueryEngineTool(
         query_engine=index_set_2[year].as_query_engine(),
@@ -74,19 +74,24 @@ individual_query_engine_tools = [
     for year in years
 ]
 
-# Sub Question Query
-query_engine = SubQuestionQueryEngine.from_defaults(
+# Sub Question Query Engine Init
+# Adds the 4 Query Engines from before to one SubQuestionQuery
+sub_question_query_engine = SubQuestionQueryEngine.from_defaults(
     query_engine_tools=individual_query_engine_tools,
     llm=google.llm,
 )
+
+# Outer Chatbot Agent
+# - 
 query_engine_tool = QueryEngineTool(
-    query_engine=query_engine,
+    query_engine=sub_question_query_engine,
     metadata=ToolMetadata(
         name="sub_question_query_engine",
         description="useful for when you want to answer queries that require analyzing multiple SEC 10-K documents for Uber",
     ),
 )
 
+# Combine the Tools we defined above into a single list of tools for the agent
 tools = individual_query_engine_tools + [query_engine_tool]
 
 # Create Agent
@@ -99,26 +104,28 @@ with open("system_prompt.txt", "r", encoding="utf-8") as f:
     loaded_system_prompt = f.read()
     # print(f"{loaded_system_prompt}\n")
 
-workflow = FunctionAgent(
+agent = FunctionAgent(
     tools=tools,
     llm=google.llm,
-    system_prompt=loaded_system_prompt
+    system_prompt=loaded_system_prompt,
+    verbose=True,
+    name="uber_previous_finance_agent",
+    description="AI Agent for Analyzing previous Uber financial years, from 2019 - 2022"
 )
 
 async def main():
-    custom_console.simple_initializer_spinner(3,"Initial Program Loading complete!")
-    
-    # print(google.llm.metadata)
-    question = "What was Uber's best year revenue wise between 2019-2022?"
-    response = await workflow.run(user_msg=question)
-    print(f"{custom_console.COLOR_RED}~ Llama Chat Speaks!{custom_console.RESET_COLOR}\n")
-    print(f"{custom_console.COLOR_YELLOW}Question:{custom_console.RESET_COLOR}")
-    print(question)
-    print(f"{custom_console.COLOR_YELLOW}\nAnswer{custom_console.RESET_COLOR}")
-    print(response)
+    custom_console.simple_initializer_spinner(3,f"\n✅ Initial Program Loading complete!\n")
+    print(google.llm.metadata)
 
-    # End Program
-    custom_console.process_timer_elapsed_time_success()
+    # User Input
+    while True:
+        text_input = input(f"{custom_console.COLOR_CYAN}~ ChiLLama Chat 🤖: {custom_console.RESET_COLOR}")
+        if text_input == "exit":
+            print("\n" + "-"*30 + " ~ Llama Chat Closing " + "-"*30)
+            custom_console.process_timer_elapsed_time_success()
+            break
+        response = await agent.run(text_input)
+        print(f"{custom_console.COLOR_YELLOW}\nAgent{custom_console.RESET_COLOR}: {response}\n")
 
 if __name__ == "__main__":
     import asyncio
