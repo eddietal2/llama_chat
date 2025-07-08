@@ -109,6 +109,7 @@ client = chromadb.CloudClient(
 )
 
 # Create ChromaDB Collection
+# Uses Embedding all-MiniLM-L6-v2, which is hosted on Hugging Face
 try:
     collection = client.create_collection(collection_name)
     print("Created CDB Collection")
@@ -150,11 +151,11 @@ try:
             sys_prompt, 
             ], # we handle tokenization, embedding, and indexing automatically. You can skip that and add your own embeddings as well
         metadatas=[{"source": "notion"}], # filter on these!
-        ids=["doc1"], # unique for each doc
+        ids=["doc2-google"], # unique for each doc
     )
     print("Added Documents to ChromaDB")
 except Exception as e:
-    print(f"Error added Collection to ChromaDB-{client.database}: {e}")
+    print(f"Error adding Document to ChromaDB-{client.database}: {e}")
     sys.exit(1)
 
 sys.exit(0)
